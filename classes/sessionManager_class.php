@@ -59,7 +59,7 @@ class Session extends DatabaseConnection
             return 0;
         }
 
-        $userDetails = $this->findUniqueAction("vartotojai", "slapyvardis", $username);
+        $userDetails = $this->selectUniqueAction("vartotojai", "slapyvardis", $username);
         //var_dump($userDetails);
 
         //check if details are correct
@@ -84,13 +84,16 @@ class Session extends DatabaseConnection
         //probably easier to have array of editing powers "edit" => true
         //probably easier to have a page to set these powers and a database with powers
 
-        var_dump($this->session);
+        //var_dump($this->session);
 
         //fill cookie to work for an hour
         setcookie($this->sessionCookieName,json_encode($this->session),time() + 60*60*60, "/");
 
         //update databse with last connected
         $this->updateSingleAction("vartotojai","paskutinis_prisijungimas", $userDetails["id"], date("Y-m-d"));
+
+        //fill history of connections
+        $this->insertAction("history",["user_id","datetime"],["'".$userDetails["id"]."'","'".date("Y-m-d h:i:s")."'"]);
 
         return 1;
 
@@ -105,5 +108,35 @@ class Session extends DatabaseConnection
     {
         setcookie($this->sessionCookieName, "", time() - 1000, '/');
         header("Location: index.php");
+    }
+
+    /**
+     * 
+     * Function to register and reload the page
+     *
+     * @param string  $username username
+     * @param string  $password password
+     * @return bool success = 1, fail = 0
+     */
+    public function register($username, $password, $name = "''", $surname = "''")
+    {
+        
+        //if user already exists return 0
+        //var_dump($this->selectUniqueAction("vartotojai", "slapyvardis", $username));
+        if(!is_null($this->selectUniqueAction("vartotojai", "slapyvardis", $username))){
+            //var_dump($this->selectUniqueAction("vartotojai", "slapyvardis", $username));
+            return 0;
+        }
+        //make the user
+
+        $cols = ["vardas","pavarde", "slapyvardis", "teises_id", "slaptazodis", "registracijos_data", "paskutinis_prisijungimas"];
+        $values = ["'".$name."'", "'".$surname."'", "'".$username."'", 3, "'".$password."'", "'".date("Y-m-d")."'", "''"];
+        if($this->insertAction("vartotojai",$cols,$values)){
+            return 1;
+        }
+        echo "failed to register due to sql";
+        return 0;
+        
+        //header("Location: index.php");
     }
 }
