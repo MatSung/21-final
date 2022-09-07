@@ -135,6 +135,7 @@ setcookie("userSettings", json_encode($userSettings), time() + 60 * 60, "/");
      <td>${c.username}</td>
      <td>${c.datetime}</td>
      </tr>`;
+     //it's over here that i need to make this dynamic
         });
         table.innerHTML = result;
     }

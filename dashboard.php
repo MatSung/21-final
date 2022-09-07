@@ -13,7 +13,9 @@
 $session = new Session();
 $settings = new Settings();
 $session->checkSession();
-
+if(isset($_POST["klientai_teisesInsertEntry"]) || isset($_POST["imones_tipasInsertEntry"]) || isset($_POST["imones_tipasDeleteEntry"]) || isset($_POST["klientai_teisesDeleteEntry"])){
+header("Location: dashboard.php");
+}
 
 ?>
 
@@ -48,7 +50,28 @@ $session->checkSession();
                                 History
                             </a>
                         </li>
+                        <?php } 
+                        if(in_array($session->session["privilegeLevel"],[1],true)){
+                        ?>
+                        <li class="nav-item">
+                            <a href="users.php" class="nav-link">
+                                Users
+                            </a>
+                        </li>
                         <?php } ?>
+                        <li class="nav-item">
+                            <a href="clients.php" class="nav-link">
+                                Clients
+                            </a>
+                        </li>
+                        <?php 
+
+                        ?>
+                        <li class="nav-item">
+                            <a href="companies.php" class="nav-link">
+                                Companies
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="app-header-right">
@@ -89,6 +112,9 @@ $session->checkSession();
                             </div>
                         </div>
                     </div>
+                    <?php
+                    if($session->session["privilegeLevel"] == 1){
+                    ?>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="main-card mb-3 card">
@@ -127,6 +153,7 @@ $session->checkSession();
                             </div>
                         </div>
                     </div>
+                    <?php } ?>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="main-card mb-3 card">
@@ -134,70 +161,36 @@ $session->checkSession();
                                     Įmonių tipai
                                 </div>
                                 <?php
-                                    if(isset($_POST["toggleSetting"])){
-                                        $settings->toggle($_POST["settingID"]);
-                                        header("Location: dashboard.php");
+                                    $companyTypes = new databaseObject("imones_tipas");
+                                    if(isset($_POST["imones_tipasInsertEntry"])){
+                                        $companyTypes->insertEntry();
                                     }
+                                    if(isset($_POST["imones_tipasDeleteEntry"])){
+                                        $companyTypes->deleteEntry();
+                                    }
+                                    //make edit button to display inputs maybe with javascript?
+                                    
+                                    $companyTypes->drawTable((($session->session["privilegeLevel"] == 3) ? 0 : 1));
+                                    
                                 ?>
-                                <div class="table-responsive">
-                                    <table class="align-middle mb-0 table table-borderless table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center">
-                                                    ID
-                                                </th>
-                                                <th>
-                                                    Name
-                                                </th>
-                                                <th>
-                                                    Description
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                // this is where we get the settings
-                                                $settings->draw();
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="main-card mb-3 card">
                                 <div class="card-header">
-                                    Settings
+                                    Klientu teises
                                 </div>
                                 <?php
-                                    if(isset($_POST["toggleSetting"])){
-                                        $settings->toggle($_POST["settingID"]);
-                                        header("Location: dashboard.php");
+                                    $clientTypes = new databaseObject("klientai_teises");
+                                    if(isset($_POST["klientai_teisesInsertEntry"])){
+                                        $clientTypes->insertEntry();
                                     }
+                                    if(isset($_POST["klientai_teisesDeleteEntry"])){
+                                        $clientTypes->deleteEntry();
+                                    }
+                                    $clientTypes->drawTable($session->session["privilegeLevel"] == 3 ? 0 : 1);
                                 ?>
-                                <div class="table-responsive">
-                                    <table class="align-middle mb-0 table table-borderless table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center">
-                                                    ID
-                                                </th>
-                                                <th>
-                                                    Name
-                                                </th>
-                                                <th>
-                                                    Value
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                // this is where we get the settings
-                                                $settings->draw();
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
                             </div>
                         </div>
                     </div>
