@@ -77,6 +77,43 @@ class DatabaseConnection
         }
     }
 
+
+    //$cols = ["products.id", "products.title", "products.description", "products.price", "categories.title as Category", products.image_url];
+    /**
+     * 
+     * Function to select with join
+     *
+     * @param string  $table1 first table
+     * @param string  $table2 second table
+     * @param string  $table1RelationCol foreign key, the key to get the unique one
+     * @param string  $table2RelationCol main key, the unique one
+     * @param string  $join LEFT or RIGHT or INNER or that other one, will append JOIN
+     * @param array  $cols all the columns that we want like ["table1.value", "table2.category_id as category", ...]
+     * @param string  $sortCol column to sort by
+     * @param string  $sortDir direction to sort ASC or DESC
+     * @param string  $filter any filter
+     */
+    public function selectJoinAction($table1, $table2, $table1RelationCol, $table2RelationCol, $join, $cols, $sortCol = "id", $sortDir = "ASC", $filter = "1"){
+        $cols = implode(",", $cols);
+
+        try{
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql= "SELECT $cols FROM $table1 
+            $join JOIN $table2
+            ON $table1.$table1RelationCol = $table2.$table2RelationCol
+            WHERE $filter
+            ORDER BY $sortCol $sortDir";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll();
+            
+            return $result; 
+        } catch(PDOException $e) {
+            return "Failed " . $e->getMessage();
+        }
+    }
+
     /**
      * 
      * Function to insert a new value into a table

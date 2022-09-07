@@ -40,6 +40,19 @@ class Session extends DatabaseConnection
 
     }
 
+    /**
+     * 
+     * Function to check session and reroute user back if the session is inactive
+     *
+     */
+    public function checkSession(){
+        if(!$this->session["active"]){
+            header("Location: index.php");
+            return 1;
+        }
+        
+
+    }
 
     /**
      * 
@@ -68,7 +81,7 @@ class Session extends DatabaseConnection
             return 0;
         }
         //now log in
-        echo "login success as ".$userDetails["slapyvardis"];
+        //echo "login success as ".$userDetails["slapyvardis"];
 
 
         //fill session details
@@ -93,7 +106,7 @@ class Session extends DatabaseConnection
         $this->updateSingleAction("vartotojai","paskutinis_prisijungimas", $userDetails["id"], date("Y-m-d"));
 
         //fill history of connections
-        $this->insertAction("history",["user_id","datetime"],["'".$userDetails["id"]."'","'".date("Y-m-d h:i:s")."'"]);
+        $this->insertAction("history",["user_id","datetime"],["'".$userDetails["id"]."'","'".date("Y-m-d H:i:s")."'"]);
 
         return 1;
 

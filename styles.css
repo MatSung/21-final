@@ -1,0 +1,7 @@
+.header-custom{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 10px !important;
+    text-align: center;
+}

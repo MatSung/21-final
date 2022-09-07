@@ -12,28 +12,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./main.css" rel="stylesheet">
     <link href="styles,css" rel="stylesheet">
-    <title>Database</title>
+    <title>Login</title>
 </head>
 
 <?php
+
+//set some user settings in a cookie
+$userSettings = array(
+    "pageSize" => [
+        "history" => 0,
+        "company" => 0,
+        "companyType" => 0,
+        "user" => 0,
+        "userType" => 0,
+        "client" => 0,
+        "clientType" => 0,
+        "settings" => 0,
+        "rights" => 0,
+        "select" => 0]
+);
+
+//if you are on this page it sets this cookie
+setcookie("userSettings",json_encode($userSettings),time() + 60*60, "/");
+
 //session check
 $session = new Session();
 $settings = new Settings();
 $wrongPassword = false;
 //session logout
+
+
+
 if (isset($_POST["logout"])) {
     $session->logout();
 }
+
 if (isset($_POST["login"])) {
     if (!$session->login($_POST["username"], $_POST["password"])) {
         $wrongPassword = true;
     }
     // if failed do something
 }
+
+
 if ($session->session["active"] == true) {
-    //do something here, go to a different page or something
+    // if logged in, push me to dashboard
+    header("Location: dashboard.php");
+    // V leftovers V
 ?>
-    <form method="POST">
+    <form method="POST" >
         <div class="col-sm-10 offset-sm-2">
             <button name="logout" class="btn btn-danger">Log out</button>
         </div>
