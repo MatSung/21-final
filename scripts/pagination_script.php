@@ -29,52 +29,6 @@ setcookie("userSettings", json_encode($userSettings), time() + 60 * 60, "/");
 
 
     <?php
-    // $array = [
-    //     array(
-    //         "id" => 1,
-    //         "name" => "kebab",
-    //         "datetime" => "2022"
-    //     ),
-    //     array(
-    //         "id" => 2,
-    //         "name" => "kebab2",
-    //         "datetime" => "20222"
-    //     ),
-    //     array(
-    //         "id" => 3,
-    //         "name" => "kebab3",
-    //         "datetime" => "20223"
-    //     ),
-    //     array(
-    //         "id" => 4,
-    //         "name" => "kebab3",
-    //         "datetime" => "20223"
-    //     ),
-    //     array(
-    //         "id" => 5,
-    //         "name" => "kebab3",
-    //         "datetime" => "20223"
-    //     ),
-    //     array(
-    //         "id" => 6,
-    //         "name" => "kebab3",
-    //         "datetime" => "20223"
-    //     ),
-    //     array(
-    //         "id" => 7,
-    //         "name" => "kebab3",
-    //         "datetime" => "20223"
-    //     ),
-    //     array(
-    //         "id" => 8,
-    //         "name" => "kebab3",
-    //         "datetime" => "20223"
-    //     )
-    // ];
-
-    ?>
-
-    <?php
     $array = $database->container;
     echo "var array = " . json_encode($array) . ";\n";
     ?>

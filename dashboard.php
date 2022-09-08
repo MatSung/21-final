@@ -9,11 +9,14 @@
 <?php include("classes/settings_class.php"); ?>
 
 
+
 <?php
 $session = new Session();
 $settings = new Settings();
 $session->checkSession();
-if(isset($_POST["klientai_teisesInsertEntry"]) || isset($_POST["imones_tipasInsertEntry"]) || isset($_POST["imones_tipasDeleteEntry"]) || isset($_POST["klientai_teisesDeleteEntry"])){
+if(isset($_POST["klientai_teisesInsertEntry"]) || isset($_POST["imones_tipasInsertEntry"]) 
+|| isset($_POST["imones_tipasDeleteEntry"]) || isset($_POST["klientai_teisesDeleteEntry"])
+|| isset($_POST["imones_tipasUpdateEntry"]) || isset($_POST["klientai_teisesUpdateEntry"])){
 header("Location: dashboard.php");
 }
 
@@ -29,8 +32,9 @@ header("Location: dashboard.php");
     <link href="./main.css" rel="stylesheet">
     <link href="styles,css" rel="stylesheet">
     <title>Dashboard</title>
+    
 </head>
-
+<?php include("scripts/editEntry_script.php"); ?>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow">
@@ -168,6 +172,9 @@ header("Location: dashboard.php");
                                     if(isset($_POST["imones_tipasDeleteEntry"])){
                                         $companyTypes->deleteEntry();
                                     }
+                                    if(isset($_POST["imones_tipasUpdateEntry"])){
+                                        $companyTypes->updateEntry();
+                                    }
                                     //make edit button to display inputs maybe with javascript?
                                     
                                     $companyTypes->drawTable((($session->session["privilegeLevel"] == 3) ? 0 : 1));
@@ -188,6 +195,9 @@ header("Location: dashboard.php");
                                     }
                                     if(isset($_POST["klientai_teisesDeleteEntry"])){
                                         $clientTypes->deleteEntry();
+                                    }
+                                    if(isset($_POST["klientai_teisesUpdateEntry"])){
+                                        $Types->updateEntry();
                                     }
                                     $clientTypes->drawTable($session->session["privilegeLevel"] == 3 ? 0 : 1);
                                 ?>

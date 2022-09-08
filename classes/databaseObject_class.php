@@ -38,6 +38,13 @@ class databaseObject extends DatabaseConnection
             $this->container = $this->selectAction($table1);
             return 1;
         }
+        if($table1 == "klientai"){
+            $tables = ["klientai_teises","imones"];
+            $tableRelationCols = [["teises_id","id"],["imones_id","id"]];
+            $join = "LEFT";
+            $cols = ["klientai.id","klientai.vardas", "klientai.pavarde", "klientai_teises.pavadinimas as teises", "klientai.aprasymas", "imones.pavadinimas as imone", "klientai.pridejimo_data"];
+            $this->container = $this->selectJoinMultipleAction($table1, $tables, $tableRelationCols,$join,$cols);
+        }
 
 
         return 0;
@@ -48,6 +55,22 @@ class databaseObject extends DatabaseConnection
             $this->insertAction($this->type,["pavadinimas","aprasymas"],["'".$_POST["pavadinimas"]."'","'".$_POST["aprasymas"]."'"]);
         } else if ($this->type == "klientai_teises"){
             $this->insertAction($this->type,["pavadinimas","reiksme"],["'".$_POST["pavadinimas"]."'","'".$_POST["reiksme"]."'"]);
+        }
+    }
+
+    public function updateEntry(){
+        if($this->type == "imones_tipas"){
+            $data = array(
+                "pavadinimas" => $_POST["pavadinimas"],
+                "aprasymas" => $_POST["aprasymas"]
+            );
+            $this->updateAction($this->type,$_POST["id"],$data);
+        } else if ($this->type == "klientai_teises"){
+            $data = array(
+                "pavadinimas" => $_POST["pavadinimas"],
+                "aprasymas" => $_POST["reiksme"]
+            );
+            $this->updateAction($this->type,$_POST["id"],$data);
         }
     }
 
@@ -126,7 +149,10 @@ class databaseObject extends DatabaseConnection
                 echo "<form method='POST'>";
                 echo "<input hidden name='id' type='text' value='".$item["id"]."'>";
                 echo "<button class='btn btn-danger' type='submit' name='".$this->type."DeleteEntry'>X</button>";
+                //button to actually edit
                 echo "</form>";
+                // echo "<button class='btn btn-info' name='".$this->type."UpdateEntry' id='".$this->type."' onclick='console.log(\"kebabas\");'   >EDIT</button>";
+                echo "<button class='btn btn-info' name='".$this->type."UpdateEntry' id='".$this->type.$item["id"]."' onclick='editEntry(\"".$this->type."\",this);'>EDIT</button>";
                 echo "</td>";
             }
             echo "</tr>";
@@ -177,5 +203,10 @@ class databaseObject extends DatabaseConnection
 
         echo "</table>";
         echo "</div>";
+    }
+
+    public function drawCreateLine(){
+        $keys = array_keys($this->container[0]);
+
     }
 }

@@ -116,6 +116,41 @@ class DatabaseConnection
 
     /**
      * 
+     * Function to select with join multiple
+     *
+     * @param string  $table1 first table
+     * @param array  $tables all of the foreign tables
+     * @param array  $tableRelationCols foreign keys [["key1","key2"],["key1","key2"]], the key to get the unique one
+     * @param string  $join LEFT or RIGHT or INNER or that other one, will append JOIN
+     * @param array  $cols all the columns that we want like ["table1.value", "table2.category_id as category", ...]
+     * @param string  $sortCol column to sort by
+     * @param string  $sortDir direction to sort ASC or DESC
+     * @param string  $filter any filter
+     */
+    public function selectJoinMultipleAction($table1, $tables, $tableRelationCols, $join, $cols, $sortCol = "id", $sortDir = "ASC", $filter = "1"){
+        $cols = implode(",", $cols);
+
+        try{
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql= "SELECT $cols FROM $table1 ";
+            for($i = 0; $i < count($tables); $i++){
+                $sql .= " $join JOIN $tables[$i] 
+                        ON ".$table1.".".$tableRelationCols[$i][0]." = ".$tables[$i].".".$tableRelationCols[$i][1];
+            }
+            $sql.= " WHERE $filter ORDER BY $sortCol $sortDir";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll();
+            
+            return $result; 
+        } catch(PDOException $e) {
+            return "Failed " . $e->getMessage();
+        }
+    }
+
+    /**
+     * 
      * Function to insert a new value into a table
      *
      * @param string  $table table name
