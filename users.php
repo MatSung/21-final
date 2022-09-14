@@ -9,18 +9,36 @@ $settings = new Settings();
 $session->checkSession();
 //privilege level
 
-$database = new databaseObject("klientai");
-if (isset($_POST[$database->type."InsertEntry"])) {
+$database = new databaseObject("vartotojai");
+$userRights = new databaseObject("vartotojai_teises");
+
+
+
+if (isset($_POST[$database->type . "InsertEntry"])) {
     $database->insertEntry();
-    header("Location: clients.php");
+    header("Location: users.php");
 }
-if (isset($_POST[$database->type."DeleteEntry"])) {
+if (isset($_POST[$database->type . "DeleteEntry"])) {
     $database->deleteEntry();
-    header("Location: clients.php");
+    header("Location: users.php");
 }
-if (isset($_POST[$database->type."UpdateEntry"])) {
+if (isset($_POST[$database->type . "UpdateEntry"])) {
     $database->updateEntry();
-    header("Location: clients.php");
+    header("Location: users.php");
+}
+
+if (isset($_POST[$userRights->type . "InsertEntry"])) {
+    $userRights->insertEntry();
+    //echo "i am retard";
+    header("Location: users.php");
+}
+if (isset($_POST[$userRights->type . "DeleteEntry"])) {
+    $userRights->deleteEntry();
+    header("Location: users.php");
+}
+if (isset($_POST[$userRights->type . "UpdateEntry"])) {
+    $userRights->updateEntry();
+    header("Location: users.php");
 }
 ?>
 
@@ -65,23 +83,23 @@ if (isset($_POST[$database->type."UpdateEntry"])) {
                                     Users
                                 </a>
                             </li>
-                        <?php 
-                        } 
-                        if ($session->session["privilegeLevel"] != 3){?>
-                        <li class="nav-item">
-                            <a href="clients.php" class="nav-link">
-                                Clients
-                            </a>
-                        </li>
                         <?php
-                        } 
+                        }
+                        if ($session->session["privilegeLevel"] != 3) { ?>
+                            <li class="nav-item">
+                                <a href="clients.php" class="nav-link">
+                                    Clients
+                                </a>
+                            </li>
+                        <?php
+                        }
                         if ($session->session["privilegeLevel"] != 3) {
-                            ?>
-                        <li class="nav-item">
-                            <a href="companies.php" class="nav-link">
-                                Companies
-                            </a>
-                        </li>
+                        ?>
+                            <li class="nav-item">
+                                <a href="companies.php" class="nav-link">
+                                    Companies
+                                </a>
+                            </li>
                         <?php } ?>
                     </ul>
                 </div>
@@ -125,24 +143,42 @@ if (isset($_POST[$database->type."UpdateEntry"])) {
                         </div>
                     </div>
                     <div class="row">
-        <div class="col-md-12">
-            <div class="main-card mb-3 card">
-                <div class="card-header">
-                    Clients
-                    
-                </div>
-                <?php
-                //var_dump($database->container);
-                //check privilege
-                $database->drawTable(1);
-                ?>
-                
-                <?php
+                        <div class="col-md-12">
+                            <div class="main-card mb-3 card">
+                                <div class="card-header">
+                                    Clients
 
-                ?>
-            </div>
-        </div>
-    </div>
+                                </div>
+                                <?php
+                                //var_dump($database->container);
+                                //check privilege
+                                $database->drawTable(1);
+                                ?>
+
+                                <?php
+
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="main-card mb-3 card">
+                                <div class="card-header">
+                                    Vartotoju Teises
+                                </div>
+                                <?php
+                                
+                                
+                                //make edit button to display inputs maybe with javascript?
+
+                                $userRights->drawTable((($session->session["privilegeLevel"] == 3) ? 0 : 1));
+
+                                ?>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,4 +186,3 @@ if (isset($_POST[$database->type."UpdateEntry"])) {
 </body>
 
 </html>
-

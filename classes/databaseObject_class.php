@@ -45,17 +45,41 @@ class databaseObject extends DatabaseConnection
             $cols = ["klientai.id","klientai.vardas", "klientai.pavarde", "klientai_teises.pavadinimas as teises", "klientai.aprasymas", "imones.pavadinimas as imone", "klientai.pridejimo_data"];
             $this->container = $this->selectJoinMultipleAction($table1, $tables, $tableRelationCols,$join,$cols);
         }
+        if($table1 == "imones"){
+            $tables = ["imones_tipas"];
+            $tableRelationCols = [["tipas_id","id"]];
+            $join = "LEFT";
+            $cols = ["imones.id","imones.pavadinimas","imones_tipas.pavadinimas as imones_tipas","imones.aprasymas"];
+            $this->container = $this->selectJoinMultipleAction($table1, $tables, $tableRelationCols,$join,$cols);
+        }
+        if($table1 == "vartotojai"){
+            $tables = ["vartotojai_teises"];
+            $tableRelationCols = [["teises_id","id"]];
+            $join = "LEFT";
+            $cols = ["vartotojai.id","vartotojai.vardas","vartotojai.pavarde","vartotojai_teises.pavadinimas as teises", "vartotojai.slaptazodis","vartotojai.registracijos_data","vartotojai.paskutinis_prisijungimas"];
+            $this->container = $this->selectJoinMultipleAction($table1, $tables, $tableRelationCols,$join,$cols);
+
+        }
+        if($table1 == "vartotojai_teises"){
+            $this->container = $this->selectAction($table1);
+        }
+        
 
 
         return 0;
     }
 
     public function insertEntry(){
-        if($this->type == "imones_tipas"){
+        if($this->type == "imones_tipas"|| $this->type == "vartotojai_teises"){
             $this->insertAction($this->type,["pavadinimas","aprasymas"],["'".$_POST["pavadinimas"]."'","'".$_POST["aprasymas"]."'"]);
-        } else if ($this->type == "klientai_teises"){
+        } else if ($this->type == "klientai_teises" ){
             $this->insertAction($this->type,["pavadinimas","reiksme"],["'".$_POST["pavadinimas"]."'","'".$_POST["reiksme"]."'"]);
+        } else if ($this->type == "klientai"){
+            $this->insertAction($this->type,["vardas","pavarde","teises_id","aprasymas","imones_id","pridejimo_data"],["'".$_POST["vardas"]."'","'".$_POST["pavarde"]."'",$_POST["teises"],"'".$_POST["aprasymas"]."'",$_POST["imone"],"'".$_POST["pridejimo_data"]."'"]);
+        } else if ($this->type == "vartotojai"){
+            $this->insertAction($this->type, ["vardas","pavarde","teises_id","slaptazodis","registracijos_data","paskutinis_prisijungimas"],["'".$_POST["vardas"]."'","'".$_POST["pavarde"]."'",$_POST["teises"],"'".$_POST["slaptazodis"]."'",date("Y-m-d"),"'".$_POST["paskutinis_prisijungimas"]."'"]);
         }
+        //foreach insert thing in the POST
     }
 
     public function updateEntry(){
@@ -70,6 +94,23 @@ class databaseObject extends DatabaseConnection
                 "pavadinimas" => $_POST["pavadinimas"],
                 "aprasymas" => $_POST["reiksme"]
             );
+            $this->updateAction($this->type,$_POST["id"],$data);
+        } else if ($this->type == "klientai"){
+            $data = array(
+                "vardas" => "'".$_POST["vardas"]."'",
+                "pavarde" => "'".$_POST["pavarde"]."'",
+                "teises_id" => $_POST["teises"],
+                "aprasymas" => "'".$_POST["aprasymas"]."'",
+                "imones_id" => $_POST["imone"],
+                "pridejimo_data" => "'".$_POST["pridejimo_data"]."'"
+            );
+            $this->updateAction($this->type,$_POST["id"],$data);
+        } else if ($this->type == "imones"){
+            $data = array(
+                "pavadinimas" => "'".$_POST["pavadinimas"]."'",
+                "tipas_id" => $_POST["tipas"],
+                "aprasymas" => "'".$_POST["aprasymas"]."'",
+                );
             $this->updateAction($this->type,$_POST["id"],$data);
         }
     }
@@ -193,9 +234,9 @@ class databaseObject extends DatabaseConnection
             echo $key;
             echo "</th>";
         }
-        echo "<th>";
-        echo "Actions";
-        echo "</th>";
+        //echo "<th>";
+        //echo "Actions";
+        //echo "</th>";
         echo "</thead>";
 
         echo "<tbody>";

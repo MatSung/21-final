@@ -100,7 +100,7 @@ class Session extends DatabaseConnection
         //var_dump($this->session);
 
         //fill cookie to work for an hour
-        setcookie($this->sessionCookieName,json_encode($this->session),time() + 60*60*60, "/");
+        setcookie($this->sessionCookieName,json_encode($this->session),time() + 60*60, "/");
 
         //update databse with last connected
         $this->updateSingleAction("vartotojai","paskutinis_prisijungimas", $userDetails["id"], date("Y-m-d"));

@@ -14,10 +14,12 @@
 $session = new Session();
 $settings = new Settings();
 $session->checkSession();
-if(isset($_POST["klientai_teisesInsertEntry"]) || isset($_POST["imones_tipasInsertEntry"]) 
-|| isset($_POST["imones_tipasDeleteEntry"]) || isset($_POST["klientai_teisesDeleteEntry"])
-|| isset($_POST["imones_tipasUpdateEntry"]) || isset($_POST["klientai_teisesUpdateEntry"])){
-header("Location: dashboard.php");
+if (
+    isset($_POST["klientai_teisesInsertEntry"]) || isset($_POST["imones_tipasInsertEntry"])
+    || isset($_POST["imones_tipasDeleteEntry"]) || isset($_POST["klientai_teisesDeleteEntry"])
+    || isset($_POST["imones_tipasUpdateEntry"]) || isset($_POST["klientai_teisesUpdateEntry"])
+) {
+    header("Location: dashboard.php");
 }
 
 ?>
@@ -30,11 +32,12 @@ header("Location: dashboard.php");
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./main.css" rel="stylesheet">
-    <link href="styles,css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
     <title>Dashboard</title>
-    
+
 </head>
 <?php include("scripts/editEntry_script.php"); ?>
+
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow">
@@ -44,38 +47,44 @@ header("Location: dashboard.php");
                     <ul class="header-menu nav">
                         <li class="nav-item">
                             <a href="dashboard.php" class="nav-link">
-                               Dashboard
+                                Dashboard
                             </a>
                         </li>
-                        <?php if($session->session["privilegeLevel"] == 3) {
-                             ?>
-                        <li class="nav-item">
-                            <a href="history.php" class="nav-link">
-                                History
-                            </a>
-                        </li>
-                        <?php } 
-                        if(in_array($session->session["privilegeLevel"],[1],true)){
+                        <?php if ($session->session["privilegeLevel"] == 3) {
                         ?>
-                        <li class="nav-item">
-                            <a href="users.php" class="nav-link">
-                                Users
-                            </a>
-                        </li>
-                        <?php } ?>
+                            <li class="nav-item">
+                                <a href="history.php" class="nav-link">
+                                    History
+                                </a>
+                            </li>
+                        <?php }
+                        if (in_array($session->session["privilegeLevel"], [1], true)) {
+                        ?>
+                            <li class="nav-item">
+                                <a href="users.php" class="nav-link">
+                                    Users
+                                </a>
+                            </li>
+                        <?php 
+                        } 
+                        if ($session->session["privilegeLevel"] != 3){?>
                         <li class="nav-item">
                             <a href="clients.php" class="nav-link">
                                 Clients
                             </a>
                         </li>
-                        <?php 
-
-                        ?>
+                        <?php
+                        } 
+                        if ($session->session["privilegeLevel"] != 3) {
+                            ?>
                         <li class="nav-item">
                             <a href="companies.php" class="nav-link">
                                 Companies
                             </a>
                         </li>
+                        <?php
+                        }
+                        ?>
                     </ul>
                 </div>
                 <div class="app-header-right">
@@ -117,46 +126,46 @@ header("Location: dashboard.php");
                         </div>
                     </div>
                     <?php
-                    if($session->session["privilegeLevel"] == 1){
+                    if ($session->session["privilegeLevel"] == 1) {
                     ?>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="main-card mb-3 card">
-                                <div class="card-header">
-                                    Settings
-                                </div>
-                                <?php
-                                    if(isset($_POST["toggleSetting"])){
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-header">
+                                        Settings
+                                    </div>
+                                    <?php
+                                    if (isset($_POST["toggleSetting"])) {
                                         $settings->toggle($_POST["settingID"]);
                                         header("Location: dashboard.php");
                                     }
-                                ?>
-                                <div class="table-responsive">
-                                    <table class="align-middle mb-0 table table-borderless table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center">
-                                                    ID
-                                                </th>
-                                                <th>
-                                                    Name
-                                                </th>
-                                                <th>
-                                                    Value
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
+                                    ?>
+                                    <div class="table-responsive">
+                                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">
+                                                        ID
+                                                    </th>
+                                                    <th>
+                                                        Name
+                                                    </th>
+                                                    <th>
+                                                        Value
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
                                                 // this is where we get the settings
                                                 $settings->draw();
-                                            ?>
-                                        </tbody>
-                                    </table>
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     <?php } ?>
                     <div class="row">
                         <div class="col-md-6">
@@ -165,22 +174,22 @@ header("Location: dashboard.php");
                                     Įmonių tipai
                                 </div>
                                 <?php
-                                    $companyTypes = new databaseObject("imones_tipas");
-                                    if(isset($_POST["imones_tipasInsertEntry"])){
-                                        $companyTypes->insertEntry();
-                                    }
-                                    if(isset($_POST["imones_tipasDeleteEntry"])){
-                                        $companyTypes->deleteEntry();
-                                    }
-                                    if(isset($_POST["imones_tipasUpdateEntry"])){
-                                        $companyTypes->updateEntry();
-                                    }
-                                    //make edit button to display inputs maybe with javascript?
-                                    
-                                    $companyTypes->drawTable((($session->session["privilegeLevel"] == 3) ? 0 : 1));
-                                    
+                                $companyTypes = new databaseObject("imones_tipas");
+                                if (isset($_POST["imones_tipasInsertEntry"])) {
+                                    $companyTypes->insertEntry();
+                                }
+                                if (isset($_POST["imones_tipasDeleteEntry"])) {
+                                    $companyTypes->deleteEntry();
+                                }
+                                if (isset($_POST["imones_tipasUpdateEntry"])) {
+                                    $companyTypes->updateEntry();
+                                }
+                                //make edit button to display inputs maybe with javascript?
+
+                                $companyTypes->drawTable((($session->session["privilegeLevel"] == 3) ? 0 : 1));
+
                                 ?>
-                                
+
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -189,21 +198,62 @@ header("Location: dashboard.php");
                                     Klientu teises
                                 </div>
                                 <?php
-                                    $clientTypes = new databaseObject("klientai_teises");
-                                    if(isset($_POST["klientai_teisesInsertEntry"])){
-                                        $clientTypes->insertEntry();
-                                    }
-                                    if(isset($_POST["klientai_teisesDeleteEntry"])){
-                                        $clientTypes->deleteEntry();
-                                    }
-                                    if(isset($_POST["klientai_teisesUpdateEntry"])){
-                                        $Types->updateEntry();
-                                    }
-                                    $clientTypes->drawTable($session->session["privilegeLevel"] == 3 ? 0 : 1);
+                                $clientTypes = new databaseObject("klientai_teises");
+                                if (isset($_POST["klientai_teisesInsertEntry"])) {
+                                    $clientTypes->insertEntry();
+                                }
+                                if (isset($_POST["klientai_teisesDeleteEntry"])) {
+                                    $clientTypes->deleteEntry();
+                                }
+                                if (isset($_POST["klientai_teisesUpdateEntry"])) {
+                                    $Types->updateEntry();
+                                }
+                                $clientTypes->drawTable($session->session["privilegeLevel"] == 3 ? 0 : 1);
                                 ?>
                             </div>
                         </div>
                     </div>
+                    <?php
+                    if ($session->session["privilegeLevel"] == 3) {
+                        $companies = new databaseObject("imones");
+                    ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-header">
+                                        Companies
+                                    </div>
+                                    <?php
+                                    $companies->drawTable(0);
+                                    ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    <?php
+                    }
+                    ?>
+                    <?php
+                    //clients only display
+                    if ($session->session["privilegeLevel"] == 3) {
+                        $clients = new databaseObject("klientai");
+                    ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-header">
+                                        Clients
+                                    </div>
+                                    <?php
+                                    $clients->drawTable(0);
+                                    ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    <?php
+                    }
+                    ?>
                 </div>
             </div>
         </div>

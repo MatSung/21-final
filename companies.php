@@ -9,18 +9,18 @@ $settings = new Settings();
 $session->checkSession();
 //privilege level
 
-$database = new databaseObject("klientai");
+$database = new databaseObject("imones");
 if (isset($_POST[$database->type."InsertEntry"])) {
     $database->insertEntry();
-    header("Location: clients.php");
+    header("Location: companies.php");
 }
 if (isset($_POST[$database->type."DeleteEntry"])) {
     $database->deleteEntry();
-    header("Location: clients.php");
+    header("Location: companies.php");
 }
 if (isset($_POST[$database->type."UpdateEntry"])) {
     $database->updateEntry();
-    header("Location: clients.php");
+    header("Location: companies.php");
 }
 ?>
 
@@ -34,7 +34,7 @@ if (isset($_POST[$database->type."UpdateEntry"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./main.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
-    <title>Clients</title>
+    <title>Companies</title>
 </head>
 <?php include("scripts/editEntry_script.php"); ?>
 
@@ -117,7 +117,7 @@ if (isset($_POST[$database->type."UpdateEntry"])) {
                     <div class="app-page-title">
                         <div class="page-title-wrapper">
                             <div class="page-title-heading">
-                                Clients
+                                Companies
                             </div>
                             <div class="page-title-actions">
                                 Actions of the page

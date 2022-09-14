@@ -44,6 +44,7 @@
             newInput.setAttribute("class","form-control-sm form-control");
             newInput.setAttribute("required","");
             newInput.setAttribute("placeholder",headers[i]);
+            //newInput.value = ;
             newInput.setAttribute("id", headers[i]);
             //newInput.setAttribute("onchange","updateMyself(this);");
             inputFields.push(newInput);
