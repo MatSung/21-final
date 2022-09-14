@@ -11,7 +11,6 @@ $session->checkSession();
 
 $database = new databaseObject("imones");
 if (isset($_POST[$database->type."InsertEntry"])) {
-    $database->insertEntry();
     header("Location: companies.php");
 }
 if (isset($_POST[$database->type."DeleteEntry"])) {
@@ -128,11 +127,10 @@ if (isset($_POST[$database->type."UpdateEntry"])) {
         <div class="col-md-12">
             <div class="main-card mb-3 card">
                 <div class="card-header">
-                    Clients
+                    Companies
                     
                 </div>
                 <?php
-                //var_dump($database->container);
                 //check privilege
                 $database->drawTable(1);
                 ?>

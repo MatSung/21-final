@@ -41,12 +41,13 @@
             let newInput = document.createElement("input");
             newInput.setAttribute("name",headers[i]);
             newInput.setAttribute("type","text");
+            //new input with options that are child appended
+            //get child options somehow
+            
             newInput.setAttribute("class","form-control-sm form-control");
             newInput.setAttribute("required","");
             newInput.setAttribute("placeholder",headers[i]);
-            //newInput.value = ;
             newInput.setAttribute("id", headers[i]);
-            //newInput.setAttribute("onchange","updateMyself(this);");
             inputFields.push(newInput);
         }
         //rowValues = rowValues.concat(headers);

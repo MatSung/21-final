@@ -66,6 +66,23 @@ class DatabaseConnection
             $sql = "SELECT $col FROM `$table` WHERE $filter";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
+            $result = $stmt->setFetchMode(PDO::FETCH_COLUMN, 0);
+            $result = $stmt->fetchAll();
+            if (empty($result)) {
+                return 0;
+            }
+            return $result;
+        } catch (PDOException $e) {
+            return "Failed: " . $e->getMessage();
+        }
+    }
+
+    public function selectIDValuePairAction($table, $col, $filter = 1){
+        try {
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "SELECT id,$col FROM `$table` WHERE $filter";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
             $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
             if (empty($result)) {

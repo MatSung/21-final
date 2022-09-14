@@ -175,6 +175,7 @@ if (
                                 </div>
                                 <?php
                                 $companyTypes = new databaseObject("imones_tipas");
+                                //var_dump($companyTypes->subcategoryList);
                                 if (isset($_POST["imones_tipasInsertEntry"])) {
                                     $companyTypes->insertEntry();
                                 }
@@ -199,6 +200,7 @@ if (
                                 </div>
                                 <?php
                                 $clientTypes = new databaseObject("klientai_teises");
+                                //var_dump($clientTypes->subcategoryList);
                                 if (isset($_POST["klientai_teisesInsertEntry"])) {
                                     $clientTypes->insertEntry();
                                 }
